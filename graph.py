@@ -34,7 +34,7 @@ def move(x,y,z): #positionX, positionY, positionZ, heading, rotationalVelocity
     centering = True
     tolerance = .1 # How close the drone has to be to be to move on
     start_time = drone.get_position_data()[0]
-    global Timeout
+    Timeout = 10
     pidPitch.setpoint = x
     pidRoll.setpoint = y
     pidThrottle.setpoint = z
@@ -58,7 +58,7 @@ def move(x,y,z): #positionX, positionY, positionZ, heading, rotationalVelocity
         drone.move(.1)
 
         print((current[0]-x) , (current[1]-y), (current[2]-z), -pidRoll(current[1])) # Printing and graphing
-        LG.update([[current[2],z-current[2]]]) # Slows down code, only use for tuning
+        LG.update([[current[2],current[2]-z]]) # Slows down code, only use for tuning
         sleep(.01)
 
 
@@ -76,7 +76,7 @@ print("takeoff")
 
 move(0,0,1) # Testing movements
 
-move(1,.5,1)
+move(.5,0,1)
 
 move(0,0,1)
 
