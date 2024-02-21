@@ -30,3 +30,4 @@ while True:
 
 drone.land()
 drone.close()
+#python c:/Users/avanhoo2498/Documents/find_pos.py
