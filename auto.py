@@ -3,7 +3,6 @@ import numpy as np
 from math import sqrt
 from time import sleep, monotonic
 from simple_pid import PID
-from LiveGraph import LiveGraph
 import traceback
 
 
@@ -25,7 +24,7 @@ pidPitch = PID(60, 4, 0.01, setpoint=1, output_limits=(-100,100)) # throttle (up
 pidPitch.time_fn = monotonic
 pidPitch.sample_time = 0.1
 
-
+saved = [1, -0.023, 0.007, 0.926, None, None, 2, -0.023, 0.007, 0.92, None, None]
 
 # color_data = drone.get_color_data()
 # color = drone.predict_colors(color_data)
@@ -65,21 +64,20 @@ def move(x,y,z, timeout=6, tolerance=.1): #positionX, positionY, positionZ, time
 drone.takeoff()
 print("takeoff")
 
+for i in range(len(saved)/6):
+    print(f"Step {i}")
+    
+    move(i+1, i+2, 1+3, i+4, i+5)
+
 move(0,0,1) # Testing movements
 
 move(1,0,1)
 
 move(0,0,1, timeout=7, tolerance=.08)
 
-# try: # Handles errors
-#     move(0,0,0,0,0)
-#     print("------moving on------")
-# except Exception as error: 
-#     traceback.print(error)
-
 
 
 drone.land()
 drone.close()
 
-# code doesn't wait for drone to reach position, it continues immediately
+#python c:/Users/avanhoo2498/Documents/PropChop/auto.py
