@@ -12,25 +12,25 @@ drone.pair()
 
 drone.set_initial_pressure()
 drone.set_drone_LED(255, 255, 255, 50)
-pidThrottle = PID(140, 6, 0.01, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
+pidThrottle = PID(140, 5, 0.01, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
 pidThrottle.time_fn = monotonic
 pidThrottle.sample_time = 0.1
 
-pidRoll = PID(60, 4, 0.01, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
+pidRoll = PID(60, 5, 0.01, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
 pidRoll.time_fn = monotonic
 pidRoll.sample_time = 0.1
 
-pidPitch = PID(60, 4, 0.01, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
+pidPitch = PID(60, 5, 0.01, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
 pidPitch.time_fn = monotonic
 pidPitch.sample_time = 0.1
 
-saved = [1, -0.023, 0.007, 0.926, None, None, 2, -0.023, 0.007, 0.92, None, None]
-
+saved = [0, 0, 0.892, -0.046, -0.049, 0.892, -0.046, -0.049, 0.892, 0.924, -0.09, 1.409, 2.285, 0.024, 1.284, 2.285, -0.014, 1.439, 2.504, 0.86, 1.368, 2.513, 0.804, 0.65, 2.513, 1.4, .65]
+print(len(saved))
 # color_data = drone.get_color_data()
 # color = drone.predict_colors(color_data)
 
 print("done1")
-def move(x,y,z, timeout=6, tolerance=.1): #positionX, positionY, positionZ, timeout, positional tolerance
+def move(x,y,z, timeout=4, tolerance=.1): #positionX, positionY, positionZ, timeout, positional tolerance
     centering = True
     start_time = drone.get_position_data()[0]
     pidPitch.setpoint = x
@@ -64,16 +64,10 @@ def move(x,y,z, timeout=6, tolerance=.1): #positionX, positionY, positionZ, time
 drone.takeoff()
 print("takeoff")
 
-for i in range(len(saved)/6):
+for i in range(int(len(saved)/3)):
     print(f"Step {i}")
     
-    move(i+1, i+2, 1+3, i+4, i+5)
-
-move(0,0,1) # Testing movements
-
-move(1,0,1)
-
-move(0,0,1, timeout=7, tolerance=.08)
+    move(saved[3*i], saved[3*i+1], saved[3*i+2])
 
 
 
