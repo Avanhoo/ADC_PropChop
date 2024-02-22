@@ -23,7 +23,7 @@ while True:
   if input("Record?") == "exit":
     break
   else:
-    saved.append(pos_count) # Saves step number
+    #saved.append(pos_count) # Saves step number
     saved.append(current[0]) # Saves position and 2 empty spaces for adjustments
     saved.append(current[1])
     saved.append(current[2])
