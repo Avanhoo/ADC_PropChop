@@ -24,7 +24,8 @@ pidPitch = PID(60, 5, 0.01, setpoint=1, output_limits=(-100,100)) # throttle (up
 pidPitch.time_fn = monotonic
 pidPitch.sample_time = 0.1
 
-saved = [0, 0, 0.892, -0.046, -0.049, 0.892, -0.046, -0.049, 0.892, 0.924, -0.09, 1.409, 2.285, 0.024, 1.284, 2.285, -0.014, 1.439, 2.504, 0.86, 1.368, 2.513, 0.804, 0.65, 2.513, 1.4, .65]
+#[0, 0, 0.892, -0.046, -0.049, 0.892, -0.046, -0.049, 0.892, 0.924, -0.09, 1.409, 2.285, 0.024, 1.284, 2.285, -0.014, 1.439, 2.504, 0.86, 1.368, 2.513, 0.804, 0.65, 2.513, 1.4, .65]
+saved = [1.226, -0.16, 1.303, 1.225, -0.162, 1.47, 2.717, 0.638, 1.557, 2.631, 0.638, 1.557]
 print(len(saved))
 # color_data = drone.get_color_data()
 # color = drone.predict_colors(color_data)
@@ -60,7 +61,6 @@ def move(x,y,z, timeout=4, tolerance=.1): #positionX, positionY, positionZ, time
         sleep(.01)
 
 
-
 drone.takeoff()
 print("takeoff")
 
@@ -68,6 +68,10 @@ for i in range(int(len(saved)/3)):
     print(f"Step {i}")
     
     move(saved[3*i], saved[3*i+1], saved[3*i+2])
+
+# move(0,1,1.5)
+# move(0,2,1.5)
+# move(0,2,2)
 
 
 
