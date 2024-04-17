@@ -70,14 +70,23 @@ def move(x,y,z, timeout=4, tolerance=.1): #positionX, positionY, positionZ, time
         sleep(.01)
 
 
+saved = ["takeoff, 0, 0, 1", 
+"forward one, 1, 0, 1, 10",
+"back one, 0, 0, 1"]
 drone.takeoff()
 print("takeoff")
 
-move(1,0,1,timeout=10)
+#move(1,0,1,timeout=10)
 
-# for i in range(int(len(saved)/3)):
-#     print(f"Step {i}")
-#     move(saved[3*i], saved[3*i+1], saved[3*i+2])
+for i in range(len(saved)):
+    step = saved[i].split(",") # Splits each step into move parameters
+    step = [float(u) if i > 0 else u for i, u in enumerate(step)] # converts strings to floats except for 0th element
+
+    print(f"Step: '{step[0]}':")
+    if len(step) == 5: # if there are timout instructions run them
+        move(step[1], step[2], step[3], step[4])
+    else:
+        move(step[1], step[2], step[3])
 
 
 drone.land()
