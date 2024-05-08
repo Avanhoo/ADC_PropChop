@@ -3,7 +3,6 @@ import numpy as np
 from math import sqrt
 from time import sleep, monotonic
 from simple_pid import PID
-from LiveGraph import LiveGraph
 import traceback
 
 
@@ -67,12 +66,14 @@ saved = []
 pos_count = 1
 
 while True:
-    current = drone.get_pos_x(unit="m"), drone.get_pos_y(unit="m"), round(drone.get_pos_z(unit="m"),3)
-    print(saved)
-    input("Record?")
-    saved.append(f"{pos_count}, {current[0]}, {current[1]}, {current[2]},")
-    pos_count += 1
-
+    #print(drone.get_button_data())
+    if drone.r1_pressed():
+        current = drone.get_pos_x(unit="m"), drone.get_pos_y(unit="m"), round(drone.get_pos_z(unit="m"),3)
+        saved.append(f"{pos_count}, {current[0]}, {current[1]}, {current[2]},")
+        print(saved)
+        pos_count += 1
+        while drone.r1_pressed():
+            pass
     sleep(.1)
 
 # try: # Handles errors
@@ -86,4 +87,4 @@ while True:
 drone.land()
 drone.close()
 
-# code doesn't wait for drone to reach position, it continues immediately
+#python c:/Users/avanhoo2498/Documents/PropChop/find_pos.py
