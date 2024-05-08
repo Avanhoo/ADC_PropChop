@@ -17,11 +17,11 @@ pidThrottle = PID(140, 5, 0.01, setpoint=1, output_limits=(-100,100)) # throttle
 pidThrottle.time_fn = monotonic
 pidThrottle.sample_time = 0.1
 
-pidRoll = PID(60, 5, 0.02, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
+pidRoll = PID(50, 10, 0.02, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
 pidRoll.time_fn = monotonic
 pidRoll.sample_time = 0.1
 
-pidPitch = PID(60, 5, 0.02, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
+pidPitch = PID(50, 10, 0.02, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
 pidPitch.time_fn = monotonic
 pidPitch.sample_time = 0.1
 
@@ -40,7 +40,7 @@ for u in range(10):
         print("BLUE")
 
 print("done1")
-def move(x,y,z, timeout=4, tolerance=.1): #positionX, positionY, positionZ, timeout, positional tolerance
+def move(x,y,z, timeout=15, tolerance=.2): #positionX, positionY, positionZ, timeout, positional tolerance
     centering = True
     start_time = drone.get_position_data()[0]
     pidPitch.setpoint = x
@@ -70,19 +70,18 @@ def move(x,y,z, timeout=4, tolerance=.1): #positionX, positionY, positionZ, time
         sleep(.01)
 
 
-saved = ["takeoff, 0, 0, 1", 
-"forward one, 1, 0, 1, 10",
-"back one, 0, 0, 1"]
-drone.takeoff()
+saved = ['1,2.292,-0.015,1.556,', '2,2.265,1.543,0.56,']
+#drone.takeoff()
 print("takeoff")
 
 #move(1,0,1,timeout=10)
 
 for i in range(len(saved)):
     step = saved[i].split(",") # Splits each step into move parameters
-    step = [float(u) if i > 0 else u for i, u in enumerate(step)] # converts strings to floats except for 0th element
+    print(step)
+    step = [float(u) for u in step] # converts strings to floats except for 0th element
 
-    print(f"Step: '{step[0]}':")
+    print(f"Step: '{step[0]}': {step[1]}, {step[2]}, {step[3]}")
     if len(step) == 5: # if there are timout instructions run them
         move(step[1], step[2], step[3], step[4])
     else:
@@ -91,10 +90,30 @@ for i in range(len(saved)):
 
 drone.land()
 
+hue_raw = drone.get_color_data()[1]
+sleep(.1)
+if 0 <= hue_raw < 60:
+    drone.set_drone_LED(255,0,0,100)
+    print("RED")
+    drone.takeoff()
+    move(1.797, 1.549, 0.539)
+
+elif 60 <= hue_raw < 180:
+    drone.set_drone_LED(0,255,0,100)
+    print("GREEN")
+    drone.takeoff()
+    move(2.534, 1.142, 0.547)
+
+elif 180 <= hue_raw:
+    drone.set_drone_LED(0,0,255,100)
+    print("BLUE")
+    drone.takeoff()
+    move(2.952, 1.653, 0.554)
+
 drone.close()
 
 
-#python c:/Users/avanhoo2498/Documents/PropChop/auto.py
+#python c:/Users/avanhoo2498/Documents/PropChop/auto_color.py
 # move(1.3,0,1.3) # Up to yellow
 # move(2.5,0,1.3) # Through yellow
 # move(2.5,0, 1.5) # Up to green
