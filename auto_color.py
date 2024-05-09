@@ -1,9 +1,7 @@
 from codrone_edu.drone import *
-import numpy as np
 from math import sqrt
 from time import sleep, monotonic
 from simple_pid import PID
-import traceback
 
 
 drone = Drone()
@@ -17,11 +15,11 @@ pidThrottle = PID(140, 5, 0.01, setpoint=1, output_limits=(-100,100)) # throttle
 pidThrottle.time_fn = monotonic
 pidThrottle.sample_time = 0.1
 
-pidRoll = PID(50, 10, 0.02, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
+pidRoll = PID(50, 6, 0.02, setpoint=1, output_limits=(-100,100)) # roll (left and right) pid
 pidRoll.time_fn = monotonic
 pidRoll.sample_time = 0.1
 
-pidPitch = PID(50, 10, 0.02, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
+pidPitch = PID(50, 6, 0.02, setpoint=1, output_limits=(-100,100)) # pitch (forward and back) pid
 pidPitch.time_fn = monotonic
 pidPitch.sample_time = 0.1
 
@@ -70,7 +68,7 @@ def move(x,y,z, timeout=15, tolerance=.2): #positionX, positionY, positionZ, tim
         sleep(.01)
 
 
-saved = ['1,2.292,-0.015,1.556', '2,2.265,1.543,0.56']
+saved = ['1, 2.292, -0.015, 1.556', '2, 2.265, 1.543, 0.56']
 drone.takeoff()
 print("takeoff")
 
@@ -112,8 +110,3 @@ drone.close()
 
 
 #python c:/Users/avanhoo2498/Documents/PropChop/auto_color.py
-# move(1.3,0,1.3) # Up to yellow
-# move(2.5,0,1.3) # Through yellow
-# move(2.5,0, 1.5) # Up to green
-# move(2.5,0.2, 1.5) # Through green
-# move(2.5,1.4, 1) # Over landing pad
