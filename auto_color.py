@@ -70,15 +70,13 @@ def move(x,y,z, timeout=15, tolerance=.2): #positionX, positionY, positionZ, tim
         sleep(.01)
 
 
-saved = ['1,2.292,-0.015,1.556,', '2,2.265,1.543,0.56,']
-#drone.takeoff()
+saved = ['1,2.292,-0.015,1.556', '2,2.265,1.543,0.56']
+drone.takeoff()
 print("takeoff")
 
-#move(1,0,1,timeout=10)
 
 for i in range(len(saved)):
     step = saved[i].split(",") # Splits each step into move parameters
-    print(step)
     step = [float(u) for u in step] # converts strings to floats except for 0th element
 
     print(f"Step: '{step[0]}': {step[1]}, {step[2]}, {step[3]}")
