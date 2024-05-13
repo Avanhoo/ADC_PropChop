@@ -69,7 +69,7 @@ while True:
     #print(drone.get_button_data())
     if drone.r1_pressed():
         current = drone.get_pos_x(unit="m"), drone.get_pos_y(unit="m"), round(drone.get_pos_z(unit="m"),3)
-        saved.append(f"{pos_count}, {current[0]}, {current[1]}, {current[2]},")
+        saved.append(f"{pos_count}, {current[0]}, {current[1]}, {current[2]}")
         print(saved)
         pos_count += 1
         while drone.r1_pressed():
