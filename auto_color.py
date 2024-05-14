@@ -11,20 +11,20 @@ drone.open()
 drone.set_initial_pressure()
 drone.set_drone_LED(255, 255, 255, 50)
 sleep(.5)
-pidThrottle = PID(140, 10, 0.01, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
+pidThrottle = PID(80, 1, 0.1, setpoint=1, output_limits=(-100,100)) # throttle (up and down) pid
 pidThrottle.time_fn = monotonic
-pidThrottle.sample_time = 0.1
+pidThrottle.sample_time = 0.01
 
-pidRoll = PID(50, 7, 0.02, setpoint=1, output_limits=(-100,100)) # roll (left and right) pid
+pidRoll = PID(80, .1, 0.03, setpoint=1, output_limits=(-100,100)) # roll (left and right) pid
 pidRoll.time_fn = monotonic
-pidRoll.sample_time = 0.1
+pidRoll.sample_time = 0.01
 
-pidPitch = PID(50, 7, 0.02, setpoint=1, output_limits=(-100,100)) # pitch (forward and back) pid
+pidPitch = PID(80, .1, 0.03, setpoint=1, output_limits=(-100,100)) # pitch (forward and back) pid
 pidPitch.time_fn = monotonic
-pidPitch.sample_time = 0.1
+pidPitch.sample_time = 0.01
 
 
-for u in range(10):
+for u in range(5):
     hue_raw = drone.get_color_data()[1] # Senses color and checks what it is
     sleep(.1)
     if 0 <= hue_raw < 60:
@@ -38,18 +38,24 @@ for u in range(10):
         print("BLUE")
 
 print("done1")
-def move(x,y,z, timeout=15, tolerance=.1): #positionX, positionY, positionZ, timeout, positional tolerance
+def move(x,y,z, timeout=15, tolerance=.15): #positionX, positionY, positionZ, timeout, positional tolerance
     centering = True
     start_time = drone.get_position_data()[0]
     pidPitch.setpoint = x
+    pidPitch.tunings =      (80, .1, 0.03)
     pidRoll.setpoint = y
+    pidRoll.tunings =       (80, .1, 0.03)
     pidThrottle.setpoint = z
+    pidThrottle.tunings =   (80, 1, 0.1)
     
     while centering: # Loops until it's in position
-        current = drone.get_pos_x(unit="m"), drone.get_pos_y(unit="m"), round(drone.get_pos_z(unit="m"),3)# gets rounded List of x, y, z positions
+        current = round(drone.get_pos_x(unit="m"),3), drone.get_pos_y(unit="m"), round(drone.get_pos_z(unit="m"),3)# gets rounded List of x, y, z positions
         dist_to_target = sqrt((current[0]-x)**2 + (current[1]-y)**2 + (current[2]-z)**2) # Calculates 3d distance to target position
-
-        if dist_to_target <= tolerance: # Checks if drone is in correct position
+        if dist_to_target <= .25:
+            pidPitch.tunings =      (100, .01, 0)
+            pidRoll.tunings =       (100, .01, 0)
+            pidThrottle.tunings =   (120, .01, .01) # NEEDS FIXED
+        elif dist_to_target <= tolerance: # Checks if drone is in correct position
             centering = False
             print(f"--- In position {x}, {y}, {z} ---")
             break
@@ -58,20 +64,24 @@ def move(x,y,z, timeout=15, tolerance=.1): #positionX, positionY, positionZ, tim
             print(f"--- Centering timeout ---")
             break
 
-        
-        drone.set_pitch(pidPitch(current[0])) # Please note pitch is x and roll is y
-        drone.set_roll(-pidRoll(current[1])) # Roll is backwards in the library
-        drone.set_throttle(pidThrottle(current[2]))
+        pitch = pidPitch(current[0])# Please note pitch is x and roll is y
+        roll = -pidRoll(current[1])# Roll is backwards in the library
+        throttle = pidThrottle(current[2])
+
+        drone.set_pitch(pitch) 
+        drone.set_roll(roll) 
+        drone.set_throttle(throttle)
         drone.move(.1)
 
-        print((current[0]-x) , (current[1]-y), round((current[2]-z),3)) # Printing and graphing
+        #print(round(current[0]-x,3), round(pitch,3))
+        print(round(current[0]-x,2) , round(current[1]-y,2), round((current[2]-z),2), round(roll, 3)) # Printing and graphing
         sleep(.01)
 
 
-saved = ['1, 0.624, -0.039, 1.153', '2, 1.2, -0.029, 0.943', '3, 0, 0, 1']
-#['1, 2.292, -0.015, 1.556', '2, 2.265, 1.543, 0.56']
+#saved = ['1, 1.824, 0, 1.289', '2, 2.427, 0.279, 1.488', '3, 2.484, 1.499, 1.3']
 drone.takeoff()
 print("takeoff")
+move(.5, 0, 1, 60, 0)
 
 
 for i in range(len(saved)):
