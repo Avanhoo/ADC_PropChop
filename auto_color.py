@@ -8,8 +8,9 @@ drone = Drone()
 drone.open()
 
 t=0
+yfinal = 1.98
 saved = ['1, 2.474, 0, 1.55', 
-         '2, 2.635, 1.7, 1.4']
+         '2, 2.635, 1.98, 1.4'] # CHECK Y VALUE
 #['1, 2.029, 0, 1.394', '2, 2.829, 0.2, 1.622', '3, 2.806, 1.474, 1.148']
 
 drone.set_initial_pressure()
@@ -99,9 +100,8 @@ while t < 60:
     t += 60# CHANGE
     if t < 45:
         print("returning...")
-        move(2.635, 1.419, 2.6,     2, .2)
-        move(0, 0, 2.6,     3, .2)
-        move(0, 0, 1,     2, .2)
+        move(0, yfinal, 1.4,     2, .2) # Square movement back to 0,0,1
+        move(0, 0, 1.4,     3, .2)
     
     
 print("landing")
