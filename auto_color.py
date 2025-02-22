@@ -75,7 +75,7 @@ def move(x,y,z, timeout=4.5, tolerance=.15): #positionX, positionY, positionZ, t
         drone.set_pitch(pitch) 
         drone.set_roll(roll) 
         drone.set_throttle(throttle)
-        drone.move(.1)
+        drone.move(.1) # CHANGE TIME?
 
         #print(round(current[0]-x,3), round(pitch,3))
         print(round(current[0]-x,2) , round(current[1]-y,2), round((z-current[2]),2), round(roll, 3)) # Printing and graphing
@@ -98,7 +98,7 @@ while t < 60:
         else:
             move(step[1], step[2], step[3])
     t += 60# CHANGE
-    if t < 45:
+    if t < 15:
         print("returning...")
         move(0, yfinal, 1.4,     2, .2) # Square movement back to 0,0,1
         move(0, 0, 1.4,     3, .2)
