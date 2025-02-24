@@ -57,9 +57,9 @@ def move(x,y,z, timeout=4.5, tolerance=.15): #positionX, positionY, positionZ, t
     z *= 0.3048
 
     pidPitch.setpoint = x
-    pidPitch.tunings =      (70, 2, 4)
+    pidPitch.tunings =      (65, 6, 3)
     pidRoll.setpoint = y
-    pidRoll.tunings =       (75, 3, 3)
+    pidRoll.tunings =       (65, 6, 3)
     pidThrottle.setpoint = z
     if current[2] < z: # Different tunings for ascending and descending
         pidThrottle.tunings =   (100, 12, 0.01) # UP
@@ -70,8 +70,8 @@ def move(x,y,z, timeout=4.5, tolerance=.15): #positionX, positionY, positionZ, t
         current = round(drone.get_pos_x(unit="m"),3), drone.get_pos_y(unit="m"), round(drone.get_pos_z(unit="m"),3)# gets rounded List of x, y, z positions
         dist_to_target = sqrt((current[0]-x)**2 + (current[1]-y)**2 + (current[2]-z)**2) # Calculates 3d distance to target position
         if dist_to_target <= .25:
-            pidPitch.tunings =      (100, 0.5, 0)
-            pidRoll.tunings =       (100, 0.5, 0)
+            pidPitch.tunings =      (100, 4, 0)
+            pidRoll.tunings =       (100, 4, 0)
             pidThrottle.tunings =   (120, 1, .01) # NEEDS FIXED
         if dist_to_target <= tolerance: # Checks if drone is in correct position
             centering = False
@@ -128,64 +128,17 @@ tStart = drone.get_position_data()[0]
 drone.takeoff()
 print("takeoff")
 
+move(0, 1, 5, tolerance=.1)# prepared for yellow loop
+move(0, 4, 5)# through yellow
+move(0, 1, 5)# back
+move(0, 6, 5)# through yellow
 
+move(-0.5, 5, 4, tolerance=.1)# preapared for green
+move(-2,   5, 4)# through green
+move(-0.5, 5, 4)# back
+move(-2,   5, 4)# through green
 
-for i in range(2): # Does a 2nd loop if 1st is fast enough
-    print("FIGURE 8")
-    move(3.4, 0, 4)# between arches
-    move(3.4, 0, 7)# up between
-    move(7, 0, 7)# past blue arch
-    move(7, 0, 4)# down past
-    move(3.4, 0, 4)# between arches
-    move(3.4, 0, 7)# up between
-    move(0, 0, 7)# before red arch
-    move(0, 0, 4)# down before
-move(4.5, 0, 3)
-
-print("ARCHES")
-move(0, 0, 4)
-move(8, 0, 4)
-move(0, 0, 4)
-move(8, 0, 4)
-
-print("LANDING")
-drone.land()
-drone.set_drone_LED(255,255,255,50)
-
-input("Continue?")
-     
-hue_raw = drone.get_color_data()[1]
-sleep(.1)
-if 0 <= hue_raw < 60:
-    drone.set_drone_LED(255,0,0,100)
-    print("RED")
-    drone.takeoff()
-    move(-.7, 0, .5,   1.25, .2)
-
-elif 60 <= hue_raw < 180:
-    drone.set_drone_LED(0,255,0,100)
-    print("GREEN")
-    drone.takeoff()
-    move(0, -.7, .5,   1.25, .2)
-
-elif 180 <= hue_raw:
-    drone.set_drone_LED(0,0,255,100)
-    print("BLUE")
-    drone.takeoff()
-    move(.7, 0, .5,   1.25, .2)
-print("TAKEOFF")
-drone.takeoff()
-move(0, 2, 5.75)# prepared for yellow loop
-move(0, 4, 5.75)# through yellow
-move(0, 2, 5.75)# back
-move(0, 8.25, 5.75)# through yellow
-
-move(-2, 8.25, 4.75)# preapared for green
-move(-4, 8.25, 4.75)# through green
-move(-2, 8.25, 4.75)# back
-move(-4, 8.25, 4.75)# through green
-
-move(-7, 8.25, 3)# over box
+move(-5.5, 5, 3, tolerance=.1)# over box
 print("LANDING")
 drone.land()
 drone.close()
