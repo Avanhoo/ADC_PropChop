@@ -1,4 +1,4 @@
-from codrone_edu.drone import *
+from codrone_edu.drone import * # Afton Van Hooser - 2025_graphed.py autonomous code for REC ADC gravity mission
 from math import sqrt
 from time import sleep, monotonic
 from simple_pid import PID
